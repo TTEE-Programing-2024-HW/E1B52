@@ -64,24 +64,24 @@ int main(void)
                     initializeSeats(seats);
                     displaySeats(seats);
                     printf("按下任意鍵返回主選單...");
-                    getchar(); // 捕獲前一個'\n'
-                    getchar(); // 等待用戶輸入任意字符
+                    getchar(); 
+                    getchar(); // Wait for the user to enter any character
                     clearScreen();
                     break;
                 case 'b':
                     clearScreen();
                     autoChooseSeat(seats, 4);
                     printf("按下任意鍵返回主選單...");
-                    getchar(); // 捕獲前一個'\n'
-                    getchar(); // 等待用戶輸入任意字符
+                    getchar(); 
+                    getchar(); // Wait for the user to enter any character
                     clearScreen();
                     break;
                 case 'c':
                     clearScreen();
                     chooseSeats(seats);
                     printf("按下任意鍵返回主選單...");
-                    getchar(); // 捕獲前一個'\n'
-                    getchar(); // 等待用戶輸入任意字符
+                    getchar(); 
+                    getchar(); // Wait for the user to enter any character
                     clearScreen();
                     break;
                 case 'd':
@@ -92,16 +92,16 @@ int main(void)
                 }
             } while (choice != 'd');
 
-            break; // 如果密碼正確，跳出迴圈
+            break; // If the password is correct, jump out of the loop
         }
         else
                 {
             printf("密碼錯誤!\n\a");
-            count++; // 錯誤次數加一
+            count++; // The number of errors is increased by one
             if (count >= 3)
             {
                 printf("密碼錯誤，程式結束\n");
-                break; // 如果錯誤次數超過三次，跳出迴圈
+                break; // If the number of errors exceeds three times, the loop is jumped
             }
         }
     }
@@ -146,6 +146,9 @@ void displaySeats(char seats[size][size])
 
 void autoChooseSeat(char seats[size][size], int n)
 {
+	int k;
+	printf("請問需要幾個座位:\n");
+	scanf("%d",&k);
     while (1)
     {
         int row = rand() % size;
@@ -311,6 +314,8 @@ void chooseSeats(char seats[size][size])
 void clearScreen()
 {
     system("cls");
+}
+
 }
 void clearScreen() {
     system("cls"); // Windows 系統下清除螢幕的方法
