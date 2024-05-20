@@ -3,10 +3,13 @@
 #include <string.h>
 #include <time.h>
 
-// 函數原型
-void initializeSeats(char seats[][9]);
-void displaySeats(char seats[][9]);
-void chooseSeats(char seats[][9]);
+#define size 9
+
+// Function Prototypes
+void initializeSeats(char seats[size][size]);
+void displaySeats(char seats[size][size]);
+void autoChooseSeat(char seats[size][size], int n);
+void chooseSeats(char seats[size][size]);
 void clearScreen();
 
 int main(void)
@@ -29,20 +32,22 @@ int main(void)
     printf(" \n");
     printf("***************************************************\n");
 
-    const char Password[] = "2024";
-    char inputPassword[6]; 
-    int attempts = 0;
-    char seats[9][9];
+    int password;
+    int count = 0;
+    char seats[size][size];
 
-    while (attempts < 3) {
+    while (count < 3)
+    {
         printf("請輸入密碼：");
-        scanf("%s", inputPassword);
+        scanf("%d", &password);
 
-        if (strcmp(inputPassword, Password) == 0) {
+        if (password == 2024)
+        {
             printf("密碼正確，歡迎進入此程式!\n");
 
             char choice;
-            do {
+            do
+            {
                 printf("----[Booking System]----\n");
                 printf("| a.Available seats    |\n");
                 printf("| b.Arrange for you    |\n");
@@ -52,47 +57,48 @@ int main(void)
                 printf("請選擇操作：");
                 scanf(" %c", &choice);
 
-                switch (choice) {
-                    case 'a':
-                        clearScreen();
-                        initializeSeats(seats);
-                        displaySeats(seats);
-                        printf("按下任意鍵返回主選單...");
-                        getchar(); // 捕獲前一個'\n'
-                        getchar(); // 等待用戶輸入任意字符
-                        clearScreen();
-                        break;
-                    case 'b':
-                        clearScreen();
-                        // 將您的其他功能代碼放在這裡
-                        printf("按下任意鍵返回主選單...");
-                        getchar(); // 捕獲前一個'\n'
-                        getchar(); // 等待用戶輸入任意字符
-                        clearScreen();
-                        break;
-                    case 'c':
-                        clearScreen();
-                        chooseSeats(seats);
-                        printf("按下任意鍵返回主選單...");
-                        getchar(); // 捕獲前一個'\n'
-                        getchar(); // 等待用戶輸入任意字符
-                        clearScreen();
-                        break;
-                    case 'd':
-                        printf("程式結束\n");
-                        break;
-                    default:
-                        printf("無效的選項，請重新選擇。\n");
+                switch (choice)
+                {
+                case 'a':
+                    clearScreen();
+                    initializeSeats(seats);
+                    displaySeats(seats);
+                    printf("按下任意鍵返回主選單...");
+                    getchar(); // 捕獲前一個'\n'
+                    getchar(); // 等待用戶輸入任意字符
+                    clearScreen();
+                    break;
+                case 'b':
+                    clearScreen();
+                    autoChooseSeat(seats, 4);
+                    printf("按下任意鍵返回主選單...");
+                    getchar(); // 捕獲前一個'\n'
+                    getchar(); // 等待用戶輸入任意字符
+                    clearScreen();
+                    break;
+                case 'c':
+                    clearScreen();
+                    chooseSeats(seats);
+                    printf("按下任意鍵返回主選單...");
+                    getchar(); // 捕獲前一個'\n'
+                    getchar(); // 等待用戶輸入任意字符
+                    clearScreen();
+                    break;
+                case 'd':
+                    printf("程式結束\n");
+                    break;
+                default:
+                    printf("無效的選項，請重新選擇。\n");
                 }
             } while (choice != 'd');
 
             break; // 如果密碼正確，跳出迴圈
-        } 
-        else 
-        {
+        }
+        else
+                {
             printf("密碼錯誤!\n\a");
-            attempts++; // 錯誤次數加一
-            if(attempts >= 3)
+            count++; // 錯誤次數加一
+            if (count >= 3)
             {
                 printf("密碼錯誤，程式結束\n");
                 break; // 如果錯誤次數超過三次，跳出迴圈
@@ -103,55 +109,209 @@ int main(void)
     return 0;
 }
 
-const int ROWS = 9;
-const int COLS = 9;
-const int NUM_RESERVED_SEATS = 10;
-
-void displaySeats(char seats[][9]) {
-    printf("  123456789\n");
-    for (int i =8; i>=0;--i) {
-        printf("%d ", i + 1);
-        for (int j = 0; j < 9; ++j) {
-            printf("%c", seats[i][j]);
+void initializeSeats(char seats[size][size])
+{
+    int i, j;
+    for (i = 0; i < size; i++)
+    {
+        for (j = 0; j < size; j++)
+        {
+            seats[i][j] = '-';
         }
-        printf("\n");
+    }
+    for (i = 0; i < 10; i++)
+    {
+        int row = rand() % size;
+        int col = rand() % size;
+        seats[row][col] = '*';
     }
 }
 
-void chooseSeats(char seats[][9]) {
-    char input[10];
-    int row, col;
-    int selected = 0;
-
-    do {
-        printf("請輸入座位選擇（格式如1-2）：");
-        scanf("%s", input);
-
-        if (sscanf(input, "%d-%d", &row, &col) != 2 || row < 1 || row > 9 || col < 1 || col > 9) {
-            printf("無效的座位選擇。\n");
-            continue;
+void displaySeats(char seats[size][size])
+{
+    int i, j;
+    printf("  1 2 3 4 5 6 7 8 9\n");
+    for (i = 0; i < size; i++)
+    {
+        printf("%d ", i + 1);
+        for (j = 0; j < size; j++)
+        {
+            printf("%c ", seats[i][j]);
         }
-
-        if (seats[row-1][col-1] == '@') {
-            printf("座位 [%d-%d] 已被選擇，請重新選擇。\n", row, col);
-            continue;
-        }
-
-        seats[row-1][col-1] = '@';
-        selected++;
-
-        displaySeats(seats);
-        printf("按下任意鍵繼續選擇，按下'd'結束選擇：");
-        char choice;
-        scanf(" %c", &choice);
-        if (choice == 'd') {
-            break;
-        }
-    } while (selected < 9);
-
-    // 將已選擇的座位記錄下來
+        printf("\n");
+    }
+    system("pause");
+    system("cls");
 }
 
+void autoChooseSeat(char seats[size][size], int n)
+{
+    while (1)
+    {
+        int row = rand() % size;
+        int col = rand() % size;
+        int k;
+        if (n == 4)
+        {
+            if (seats[row][col] == '-' && seats[row][col + 1] == '-' && seats[row + 1][col] == '-' && seats[row + 1][col + 1] == '-' && (col + 1) < size)
+            {
+                seats[row][col] = '@';
+                seats[row][col + 1] = '@';
+                seats[row + 1][col] = '@';
+                seats[row + 1][col + 1] = '@';
+                printf("System has arranged your seats!\n");
+                displaySeats(seats);
+                char sat;
+                printf("Satisfied? (y/n)");
+                while (1)
+                {
+                    fflush(stdin);
+                    scanf("%c", &sat);
+
+                    if (sat == 'y')
+                    {
+                        seats[row][col] = '*';
+                        seats[row][col + 1] = '*';
+                        seats[row + 1][col] = '*';
+                        seats[row + 1][col + 1] = '*';
+                        return;
+                    }
+                    else if (sat == 'n')
+                    {
+                        seats[row][col] = '-';
+                        seats[row][col + 1] = '-';
+                        seats[row + 1][col] = '-';
+                        seats[row + 1][col + 1] = '-';
+                        break;
+                    }
+                    else
+                    {
+                        printf("Satisfied? (y/n): ");
+                    }
+                }
+            }
+        }
+        if (n >= 1 && n <= 4)
+        {
+            for (k = 0; k < n; k++)
+            {
+                if (seats[row][col + k] != '-' || (col + k) >= size)
+                {
+                    break;
+                }
+            }
+            if (k == n)
+            {
+                for (k = 0; k < n; k++)
+                {
+                    seats[row][col + k] = '@';
+                }
+                printf("System has arranged your seats!\n");
+                displaySeats(seats);
+                char sat;
+                printf("Satisfied? (y/n)");
+                while (1)
+                {
+                    fflush(stdin);
+                    scanf("%c", &sat);
+                    if (sat == 'y')
+                    {
+                        for (k = 0; k < n; k++)
+                        {
+                            seats[row][col + k] = '*';
+                        }
+                        return;
+                    }
+                    else if (sat == 'n')
+                    {
+                        for (k = 0; k < n; k++)
+                        {
+                            seats[row][col + k] = '-';
+                        }
+                        break;
+                    }
+                    else
+                    {
+                        printf("Satisfied? (y/n): ");
+                    }
+                }
+            }
+        }
+    }
+}
+
+void chooseSeats(char seats[size][size])
+{
+    char input[100];
+    while (1)
+    {
+        int i = 0, j = 0;
+        printf("Please input the seats and input '0' for the end (for example \"1-2 2-9 0\"): ");
+        fflush(stdin);
+        fgets(input, sizeof(input), stdin);
+        char *box = strtok(input, " ");
+        while (box != NULL)
+        {
+            if (box[0] == '0')
+            {
+                break;
+            }
+            else if (strlen(box) != 3 || box[1] != '-' || box[0] < '1' || box[0] > '9' || box[2] < '1' || box[2] > '9')
+            {
+                i++;
+                printf("wrong input format\n");
+                break;
+            }
+            else
+            {
+                if (seats[box[0] - '1'][box[2] - '1'] == '@' || seats[box[0] - '1'][box[2] - '1'] == '*')
+                {
+                    i++;
+                    printf("Seat [%d,%d] has already been chosen\n", (box[0] - '1') + 1, (box[2] - '1') + 1);
+                    break;
+                }
+                else
+                {
+                    seats[box[0] - '1'][box[2] - '1'] = '@';
+                }
+            }
+            box = strtok(NULL, " ");
+        }
+        if (i == 0)
+        {
+            displaySeats(seats);
+            for (i = 0; i < size; i++)
+            {
+                for (j = 0; j < size; j++)
+                {
+                    if (seats[i][j] == '@')
+                    {
+                        seats[i][j] = '*';
+                    }
+                }
+            }
+            return;
+        }
+        else
+        {
+            for (i = 0; i < size; i++)
+            {
+                for (j = 0; j < size; j++)
+                {
+                    if (seats[i][j] == '@')
+                    {
+                        seats[i][j] = '-';
+                    }
+                }
+            }
+        }
+    }
+}
+
+void clearScreen()
+{
+    system("cls");
+}
 void clearScreen() {
     system("cls"); // Windows 系統下清除螢幕的方法
 }
